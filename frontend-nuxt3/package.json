@@ -11,6 +11,7 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/node": "^18",
+    "nuxi": "^3.6.1",
     "nuxt": "^3.6.1"
   },
   "packageManager": "yarn@3.6.0"

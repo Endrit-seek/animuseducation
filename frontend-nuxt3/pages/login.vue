@@ -4,18 +4,11 @@ const form = ref({
   password: "password"
 })
 
+const auth = useAuthStore();
+
 async function handleLogin() {
-  await useApiFetch("/sanctum/csrf-cookie")
-
-  await useApiFetch("/login", {
-    method: "POST",
-    body: form.value
-  })
-
-  const { data } = await useApiFetch("/api/user")
-
-  console.log(data);
-  
+  const { error } = await auth.login(form.value);
+  console.log(error);
 }
 </script>
 

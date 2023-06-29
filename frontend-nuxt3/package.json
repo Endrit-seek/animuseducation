@@ -14,5 +14,9 @@
     "nuxi": "^3.6.1",
     "nuxt": "^3.6.1"
   },
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@3.6.0",
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.11",
+    "pinia": "^2.1.4"
+  }
 }

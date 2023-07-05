@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    Page: foo
+    Page: Auth
   </div>
 </template>
 

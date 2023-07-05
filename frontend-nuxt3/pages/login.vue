@@ -1,17 +1,3 @@
-<script lang="ts" setup>
-const form = ref({
-  email: "test@example.com",
-  password: "password"
-})
-
-const auth = useAuthStore();
-
-async function handleLogin() {
-  const { error } = await auth.login(form.value);
-  console.log(error);
-}
-</script>
-
 <template>
   <form @submit.prevent="handleLogin">
     <label>
@@ -28,3 +14,23 @@ async function handleLogin() {
 </template>
 
 <style scoped></style>
+
+<script lang="ts" setup>
+definePageMeta({
+  middleware: [
+    'auth'
+  ]
+})
+
+const form = ref({
+  email: "test@example.com",
+  password: "password"
+})
+
+const auth = useAuthStore();
+
+async function handleLogin() {
+  await auth.login(form.value);
+  navigateTo('/')
+}
+</script>

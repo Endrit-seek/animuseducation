@@ -27,6 +27,25 @@ export function useApiFetch<T> (path: string, options: UseFetchOptions<T> = {}) 
     headers: {
       ...headers,
       ...options?.headers
+    },
+    onRequest() {
+      useErrorStore().$reset();
+    },
+    onResponse({ response }) {
+      const message = useMessageStore()
+      if (response._data.status) {
+        message.$state.text = response._data.status
+      }
+    },
+    onResponseError({ response }) {
+      const errors = useErrorStore()
+      errors.$state.errors = response._data.errors;
+      errors.$state.message = response._data.message;
+      errors.$state.status = response.status;
+      errors.$state.statusText = response.statusText;
+      setTimeout(() => {
+        errors.$reset()
+      }, errors.$state.timeout)
     }
   });
 }

@@ -1,3 +1,5 @@
+import { AsyncData } from "#app";
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User | null
@@ -21,17 +23,19 @@ export const useAuthStore = defineStore('auth', {
     async login(credentials: Credentials) {
       await useApiFetch("/sanctum/csrf-cookie");
 
-      const login: any = await useApiFetch("/api/login", {
+      const response = await useApiFetch("/api/login", {
         method: "POST",
         body: credentials,
-      });
+      }) as AsyncData<Data, any>;
 
-      if (process.client) {
-        localStorage.setItem("token", 'Bearer ' + login.data.value.token)
+      if (!response.error.value) {
+        if (process.client) {
+          localStorage.setItem("token", 'Bearer ' + response.data.value.token)
+        }
+        await this.fetchUser();
       }
-      await this.fetchUser();
 
-      return login;
+      return response;
     },
 
     async register(info: RegistrationInfo) {
@@ -53,6 +57,17 @@ export const useAuthStore = defineStore('auth', {
       if (process.client) {
         window.localStorage.removeItem('token');
       }
+    },
+
+    async forgotPassword(email: string) {
+      await useApiFetch("/sanctum/csrf-cookie");
+
+      await useApiFetch("/api/forgot-password", {
+        method: 'POST',
+        body: {
+          email: email
+        }
+      })
     }
   },
 
@@ -60,6 +75,10 @@ export const useAuthStore = defineStore('auth', {
     storage: persistedState.localStorage,
   },
 })
+
+type Data = {
+  token: string
+}
 
 type User = {
   id: number;

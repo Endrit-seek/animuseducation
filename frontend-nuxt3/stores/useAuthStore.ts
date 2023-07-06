@@ -68,6 +68,30 @@ export const useAuthStore = defineStore('auth', {
           email: email
         }
       })
+    },
+
+    async resetPassword(email: string, password: string, password_confirmation: string, token: string) {
+      await useApiFetch("/sanctum/csrf-cookie");
+
+      await useApiFetch("/api/reset-password", {
+        method: 'POST',
+        body: {
+          email: email,
+          password: password,
+          password_confirmation: password_confirmation,
+          token: token,
+        }
+      })
+    },
+
+    async reSendVerificationLink() {
+      await useApiFetch("/sanctum/csrf-cookie");
+
+      await useApiFetch("/api/email/verification-notification", {
+        method: 'POST',
+      })
+
+      await this.fetchUser();
     }
   },
 
@@ -84,6 +108,9 @@ type User = {
   id: number;
   name: string;
   email: string;
+  email_verified_at: string,
+  created_at: string,
+  updated_at: string
 }
 
 type Credentials = {

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -20,13 +19,14 @@ Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
                 ->name('password.store');
 
-Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
-                ->middleware(['auth:sanctum', 'signed', 'throttle:6,1'])
-                ->name('verification.verify');
+Route::middleware(['auth:sanctum'])->group(function () {
+  Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend'])
+        ->name('verification.send');
+});
 
-Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-                ->middleware(['auth:sanctum', 'throttle:6,1'])
-                ->name('verification.send');
+Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, 'verify'])
+                ->middleware(['signed'])
+                ->name('verification.verify');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->middleware('auth:sanctum')

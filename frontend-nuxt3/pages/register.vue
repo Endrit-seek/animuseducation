@@ -167,7 +167,7 @@ const handleRegister = handleSubmit(async (values) => {
       password: values.password
     })
 
-    navigateTo("/");
+    navigateTo("/verify");
   } else {
     throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
   }

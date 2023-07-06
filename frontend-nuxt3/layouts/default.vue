@@ -32,7 +32,11 @@
             <v-btn color="primary" to="/register">Register</v-btn>
           </div>
           <div v-else-if="auth && auth.user">
-            Hello {{ auth.user.name }}
+            Hello, {{ auth.user.name }}.
+            <span v-if="!auth.$state.user?.email_verified_at">
+              Your email is not verified, click here to verify:
+              <v-btn color="success" nxut to="/verify">Verify</v-btn>
+            </span>
             <v-btn color="danger" v-if="auth.isLoggedIn" @click="handleLogout">Sign out</v-btn>
           </div>
         </ClientOnly>
